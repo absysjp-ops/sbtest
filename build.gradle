@@ -1,0 +1,63 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.12'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'gg.jte.gradle' version '3.2.1'
+}
+
+group = 'sbtest'
+version = '0.0.1-SNAPSHOT'
+
+
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+//        JDK 17 に設定
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "gg.jte:jte-spring-boot-starter-3:3.2.1"
+    implementation "gg.jte:jte:3.2.1"
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+
+jte {
+
+}
+
+// この行を追加して、生成されたソースをコンパイル対象に含める
+sourceSets.main.java.srcDir 'build/generated-sources/jte'
+
+
+// bootJarタスクが実行される前jteのプリコンパイルタスク(precompileJte)が実行されるよう設定
+tasks.named('bootJar') {
+    dependsOn(tasks.named('precompileJte'))
+}
+
