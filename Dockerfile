@@ -20,6 +20,9 @@ WORKDIR /app
 # (ファイル名が変わっても対応できるようワイルドカードを使用)
 COPY --from=builder /home/gradle/project/build/libs/*.jar app.jar
 
+# 万が一のためにテンプレートフォルダも置いておく（念のため）
+COPY --from=builder /home/gradle/project/src/main/jte /app/src/main/jte
+
 # ポート8080を公開 (Renderへの通知用)
 EXPOSE 8080
 
